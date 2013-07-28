@@ -1,0 +1,76 @@
+package session
+
+import (
+  "fmt"
+  "code.google.com/p/go.net/websocket"
+)
+
+type message struct {
+  Id string `json:"id"`
+  Action string `json:"action"`
+  Args map[string]interface{} `json:"args"`
+}
+
+type Session struct {
+  ws *websocket.Conn
+  Data map[string]interface{}
+}
+
+var live_sessions = map[*Session]bool{}
+
+func addLiveSession(s *Session) {
+  live_sessions[s] = true
+}
+
+func removeLiveSession(s *Session) {
+  delete(live_sessions, s)
+}
+
+func Init(ws *websocket.Conn) Session {
+  return Session{ ws: ws, Data: make(map[string]interface{}) }
+}
+
+func (s Session) Start() {
+  fmt.Println("Connected:", s.ws)
+  addLiveSession(&s)
+  for {
+    var msg message
+    err := websocket.JSON.Receive(s.ws, &msg)
+    if err != nil {
+      fmt.Println(err)
+      break
+    }
+    fmt.Printf("Action: %s , Id: %s , Args: %i , s.Data: %i\n", msg.Action, msg.Id, msg.Args, s.Data)
+    if !execute(msg.Action, &s, msg.Id, msg.Args) {
+      fmt.Println("Could not find action:", msg.Action)
+    }
+  }
+  removeLiveSession(&s)
+  fmt.Println("Disconnected:", s.ws)
+}
+
+func (s Session) Send(response_id string, name string, args map[string]interface{}) error {
+  msg := message { Id: response_id, Action: name, Args: args }
+  return websocket.JSON.Send(s.ws, msg)
+}
+
+func SendAll(name string, args map[string]interface{}) {
+  SendAllExcept(name, args, make([]*Session, 0))
+}
+
+func SendAllExcept(name string, args map[string]interface{}, exceptions []*Session) {
+  var excepted bool
+  for k := range live_sessions {
+    excepted = false
+    for _, v := range exceptions {
+      if v == k {
+        excepted = true
+        break
+      }
+    }
+    if !excepted {
+      k.Send("", name, args)
+    }
+  }
+}
+
