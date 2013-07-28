@@ -1,8 +1,8 @@
 package sago
 
 import (
-  "sago/session"
-  "sago/settings"
+  "github.com/craigjackson/sago/session"
+  "github.com/craigjackson/sago/settings"
 
   "fmt"
   "net/http"
