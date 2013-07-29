@@ -63,5 +63,5 @@ ws.send(JSON.stringify({ id: "sago123", action: "ping", data: { foo: "bar" } }))
 
 ## License
 
-The MIT License - Copyright (c) 2012-2013 Craig Jackson
+The MIT License - Copyright (c) 2013 Craig Jackson
 
