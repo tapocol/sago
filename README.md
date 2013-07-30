@@ -61,6 +61,38 @@ ws.onmessage = function(message) { console.log(message) };
 ws.send(JSON.stringify({ id: "sago123", action: "ping", data: { foo: "bar" } }));
 ```
 
+## Settings
+
+Two methods for overriding default settings.
+
+### 1.
+
+For server settings, you may use in environment variables.
+
+```sh
+SERVER_HOST=example.com SERVER_PORT=80 go run app.go
+```
+
+### 2.
+
+For all settings, you may import settings and set the variable yourself. Make
+sure to establish as early in the process as possible (especially before
+sago.Run()).
+
+```go
+import "github.com/craigjackson/sago/settings"
+
+//...
+
+func main() {
+  settings.SERVER_HOST = "localhost"
+  settings.SERVER_PORT = "4001"
+  settings.WEBSOCKET_PATH = "/ws_now_here"
+  //...
+  sago.Run()
+}
+```
+
 ## License
 
 The MIT License - Copyright (c) 2013 Craig Jackson

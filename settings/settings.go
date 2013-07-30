@@ -1,6 +1,7 @@
 package settings
 
 import (
+  "os"
 )
 
 var (
@@ -10,4 +11,13 @@ var (
   ROOT_PATH = "/"
   WEBSOCKET_PATH = "/ws"
 )
+
+func init() {
+  if os.Getenv("SERVER_HOST") != "" {
+    SERVER_HOST = os.Getenv("SERVER_HOST")
+  }
+  if os.Getenv("SERVER_PORT") != "" {
+    SERVER_PORT = os.Getenv("SERVER_PORT")
+  }
+}
 
