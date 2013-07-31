@@ -33,6 +33,12 @@ func Init(ws *websocket.Conn) Session {
 func (s Session) Start() {
   fmt.Println("Connected:", s.ws)
   addLiveSession(&s)
+  s.listen()
+  removeLiveSession(&s)
+  fmt.Println("Disconnected:", s.ws)
+}
+
+func (s Session) listen() {
   for {
     var msg message
     err := websocket.JSON.Receive(s.ws, &msg)
@@ -40,13 +46,9 @@ func (s Session) Start() {
       fmt.Println(err)
       break
     }
-    fmt.Printf("Action: %s , Id: %s , Args: %i , s.Data: %i\n", msg.Action, msg.Id, msg.Args, s.Data)
-    if !execute(msg.Action, &s, msg.Id, msg.Args) {
-      fmt.Println("Could not find action:", msg.Action)
-    }
+    fmt.Printf("Session: %i, Message: %i\n", s, msg)
+    handle(&s, msg)
   }
-  removeLiveSession(&s)
-  fmt.Println("Disconnected:", s.ws)
 }
 
 func (s Session) Send(response_id string, name string, args map[string]interface{}) error {

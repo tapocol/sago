@@ -1,19 +1,28 @@
 package session
 
 import (
+  "fmt"
 )
 
-var handlers = make(map[string]func(s *Session, id string, args map[string]interface{}))
-
-func AddAction(name string, handler func(s *Session, id string, args map[string]interface{})) {
-  handlers[name] = handler
+type Request struct {
+  Session *Session
+  Id string
+  Args map[string]interface{}
 }
 
-func execute(name string, s *Session, id string, args map[string]interface{}) bool {
-  if handlers[name] == nil {
-    return false
+var channels = make(map[string]chan *Request)
+
+func InitChannel(name string) chan *Request {
+  c := make(chan *Request)
+  channels[name] = c
+  return c
+}
+
+func handle(s *Session, msg message) {
+  if channels[msg.Action] != nil {
+    channels[msg.Action] <- &Request{Session: s, Id: msg.Id, Args: msg.Args}
+  } else {
+    fmt.Println("Action", msg.Action, "has no channel")
   }
-  handlers[name](s, id, args)
-  return true
 }
 
