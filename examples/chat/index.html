@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Sago Chat</title>
+    <script>
+      window.onload = function() {
+        window.ws = new WebSocket("ws://localhost:4000/ws");
+        var handlers = {};
+        var replies = {};
+        window.ws.onmessage = function(evt) {
+          var data = JSON.parse(evt.data);
+          console.log(data);
+          if (data.id != "") {
+            replies[data.id][data.action](data.args);
+          } else {
+            handlers[data.action](data.args);
+          }
+        };
+        handlers["chat"] = function(args) {
+          var messages = document.getElementById("messages");
+          messages.innerHTML += "<div class=\"message\"><strong class=\"name\">" + args.name + ":</strong> " + args.message + "</div>";
+        };
+        document.getElementById("btn_auth_change").addEventListener("click", function(evt) {
+          var name = document.getElementById("npt_name").value;
+          var id = "sago_auth";
+          replies[id] = {
+            success: function(args) {
+              document.getElementById("my_name").textContent = name
+            },
+            fail: function(args) {
+              alert("Could not change name: " + args.message);
+            }
+          };
+          window.ws.send(JSON.stringify({id: id, action: "auth", args: { name: name }}));
+        }, false);
+        document.getElementById("btn_message_send").addEventListener("click", function(evt) {
+          var message = document.getElementById("npt_message").value;
+          var id = "sago_chat";
+          replies[id] = {
+            fail: function(args) {
+              alert("Could not send message: " + args.message);
+            }
+          };
+          window.ws.send(JSON.stringify({id: id, action: "chat", args: { message: message }}));
+          document.getElementById("npt_message").value = "";
+        }, false);
+      };
+    </script>
+  </head>
+  <body>
+    <div id="auth">
+      <input id="npt_name" type="text" placeholder="Enter new name" />
+      <button id="btn_auth_change">Change</button>
+    </div>
+    <div id="messages">
+    </div>
+    <div id="send">
+      <span id="my_name"></span>
+      <input id="npt_message" type="text" placeholder="Enter message" />
+      <button id="btn_message_send">Send</button>
+    </div>
+  </body>
+</html>
