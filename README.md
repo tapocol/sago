@@ -20,38 +20,21 @@ import (
 )
 ```
 
-Will need to create a function that accepts three specific parameters:
-```go
-func ping(r *session.Request) {
-  // handle action
-}
-```
-
 Need to add the actions at the first part of main() then use Run() to start the
 server:
 ```go
 func main() {
   c := session.InitChannel("ping")
-  for {
-    for v := range c {
-      ping(v)
-    }
+  for r := range c {
+    r.Session.Send(r.Id, "pong", r.Args)
   }
   session.Run()
 }
 ```
 
-As you noticed, we just commented out the place to handle the action. Lets just
-respond to the client with "pong":
-```go
-func ping(r *session.Request) {
-  r.Session.Send(r.Id, "pong", r.Args)
-}
-```
-
-That will send a reply (passing the Id in the first parameter) JSON message back
-to the client with the action "pong". The extra Args passed back will just be
-the exact data the client passed to us.
+On "ping" from the client, we will send a reply (passing the Id in the first
+parameter) JSON message back to the client with the action "pong". The extra
+Args passed back will just be the exact data the client passed to us.
 
 Now, you just need to start the server from the command-line:
 ```sh
