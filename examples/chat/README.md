@@ -1,6 +1,8 @@
 # Sago Chat
 
-An example chat app that uses the sago library.
+An example chat app that uses the sago library. This app shows how to define
+your own action channel with "auth", and how to use a third-party extension in
+your own app.
 
 ## Usage
 
