@@ -12,11 +12,10 @@ $ go get github.com/craigjackson/sago
 
 ## Usage
 
-Will need to import sago and sago/session.
+Will need to import sago.
 ```go
 import (
   "github.com/craigjackson/sago"
-  "github.com/craigjackson/sago/session"
 )
 ```
 
@@ -24,11 +23,11 @@ Need to add the actions at the first part of main() then use Run() to start the
 server:
 ```go
 func main() {
-  c := session.InitChannel("ping")
+  c := sago.InitChannel("ping")
   for r := range c {
     r.Session.Send(r.Id, "pong", r.Args)
   }
-  session.Run()
+  sago.Run()
 }
 ```
 

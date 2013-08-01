@@ -1,4 +1,4 @@
-package session
+package sago
 
 import (
   "fmt"
@@ -24,10 +24,6 @@ func addLiveSession(s *Session) {
 
 func removeLiveSession(s *Session) {
   delete(live_sessions, s)
-}
-
-func Init(ws *websocket.Conn) Session {
-  return Session{ ws: ws, Data: make(map[string]interface{}) }
 }
 
 func (s Session) Start() {

@@ -1,7 +1,6 @@
 package sago
 
 import (
-  "github.com/craigjackson/sago/session"
   "github.com/craigjackson/sago/settings"
 
   "fmt"
@@ -11,7 +10,7 @@ import (
 )
 
 func wsHandler(ws *websocket.Conn) {
-  s := session.Init(ws)
+  s := Session{ ws: ws, Data: make(map[string]interface{}) }
   s.Start()
 }
 

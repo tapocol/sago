@@ -1,4 +1,4 @@
-package session
+package sago
 
 import (
   "fmt"
