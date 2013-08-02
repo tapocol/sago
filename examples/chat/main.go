@@ -13,9 +13,9 @@ func auth(r *sago.Request) {
 }
 
 func main() {
-  ac := sago.InitChannel("auth")
+  auth_action := sago.AddAction("auth")
   go func() {
-    for v := range ac {
+    for v := range auth_action.Channel {
       auth(v)
     }
   }()
