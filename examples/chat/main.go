@@ -13,12 +13,7 @@ func auth(r *sago.Request) {
 }
 
 func main() {
-  auth_action := sago.AddAction("auth")
-  go func() {
-    for v := range auth_action.Channel {
-      auth(v)
-    }
-  }()
+  sago.AddAction("auth", auth)
   sago_chat.Init()
   sago.Run()
 }
