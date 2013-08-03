@@ -23,10 +23,9 @@ Need to add the actions at the first part of main() then use Run() to start the
 server:
 ```go
 func main() {
-  c := sago.InitChannel("ping")
-  for r := range c {
+  sago.AddAction("ping", func(*sago.Request) {
     r.Session.Send(r.Id, "pong", r.Args)
-  }
+  })
   sago.Run()
 }
 ```
