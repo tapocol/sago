@@ -79,6 +79,10 @@ func main() {
 }
 ```
 
+## Thanks
+
+Thanks to @braindev for feedback and ideas on this project.
+
 ## License
 
 The MIT License - Copyright (c) 2013 Craig Jackson
