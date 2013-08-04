@@ -8,7 +8,7 @@ import (
 type message struct {
   Id string `json:"id"`
   Action string `json:"action"`
-  Args map[string]interface{} `json:"args"`
+  Args *map[string]interface{} `json:"args"`
 }
 
 type Session struct {
@@ -48,7 +48,7 @@ func (s Session) listen() {
 }
 
 func (s Session) Send(response_id string, name string, args map[string]interface{}) error {
-  msg := message { Id: response_id, Action: name, Args: args }
+  msg := message { Id: response_id, Action: name, Args: &args }
   return websocket.JSON.Send(s.ws, msg)
 }
 
