@@ -1,4 +1,4 @@
-# SAGO (Socket Action Go)
+# Sago (Socket Action Go)
 
 Sago is a framework for web development with the use of websockets. Gives the
 use of simple actions to pass between server and client for real-time
@@ -23,7 +23,7 @@ Need to add the actions at the first part of main() then use Run() to start the
 server:
 ```go
 func main() {
-  sago.AddAction("ping", func(*sago.Request) {
+  sago.AddAction("ping", func(r *sago.Request) {
     r.Session.Send(r.Id, "pong", r.Args)
   })
   sago.Run()
