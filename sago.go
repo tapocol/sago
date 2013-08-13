@@ -5,7 +5,6 @@ import (
 
   "fmt"
   "net/http"
-  "text/template"
   "code.google.com/p/go.net/websocket"
 )
 
@@ -22,10 +21,7 @@ func wsHandler(ws *websocket.Conn) {
 //}
 
 func Run() {
-  indexTemplate := template.Must(template.ParseFiles(settings.ROOT_TEMPLATE))
-  http.HandleFunc(settings.ROOT_PATH, func(response http.ResponseWriter, request *http.Request) {
-    indexTemplate.Execute(response, request.Host)
-  })
+  http.Handle(settings.ROOT_PATH, http.StripPrefix(settings.ROOT_PATH, http.FileServer(http.Dir(settings.PUBLIC_DIR))))
   http.Handle(settings.WEBSOCKET_PATH, websocket.Handler(wsHandler))
   fmt.Println(fmt.Sprintf("Starting Server on %s:%s ...", settings.SERVER_HOST, settings.SERVER_PORT))
   //err := http.ListenAndServe(fmt.Sprintf("%s:%s", settings.SERVER_HOST, settings.SERVER_PORT), httpHandler{})

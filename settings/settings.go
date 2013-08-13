@@ -9,6 +9,7 @@ var (
   SERVER_PORT = "4000"
   ROOT_TEMPLATE = "index.html"
   ROOT_PATH = "/"
+  PUBLIC_DIR = "public"
   WEBSOCKET_PATH = "/ws"
 )
 
