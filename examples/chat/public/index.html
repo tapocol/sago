@@ -12,9 +12,9 @@
           var data = JSON.parse(evt.data);
           console.log(data);
           if (data.id != "") {
-            replies[data.id][data.action](data.args);
+            replies[data.id][data.action](JSON.parse(data.args));
           } else {
-            handlers[data.action](data.args);
+            handlers[data.action](JSON.parse(data.args));
           }
         };
         handlers["chat"] = function(args) {
@@ -32,7 +32,7 @@
               alert("Could not change name: " + args.message);
             }
           };
-          window.ws.send(JSON.stringify({id: id, action: "auth", args: { name: name }}));
+          window.ws.send(JSON.stringify({id: id, action: "auth", args: JSON.stringify({ name: name })}));
         }, false);
         document.getElementById("btn_message_send").addEventListener("click", function(evt) {
           var message = document.getElementById("npt_message").value;
@@ -42,7 +42,7 @@
               alert("Could not send message: " + args.message);
             }
           };
-          window.ws.send(JSON.stringify({id: id, action: "chat", args: { message: message }}));
+          window.ws.send(JSON.stringify({id: id, action: "chat", args: JSON.stringify({ message: message })}));
           document.getElementById("npt_message").value = "";
         }, false);
       };

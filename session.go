@@ -2,13 +2,14 @@ package sago
 
 import (
   "fmt"
+  "encoding/json"
   "code.google.com/p/go.net/websocket"
 )
 
 type message struct {
   Id string `json:"id"`
   Action string `json:"action"`
-  Args *map[string]interface{} `json:"args"`
+  Args string `json:"args"`
 }
 
 type Session struct {
@@ -48,7 +49,11 @@ func (s Session) listen() {
 }
 
 func (s Session) Send(response_id string, name string, args map[string]interface{}) error {
-  msg := message { Id: response_id, Action: name, Args: &args }
+  enc_args, err := json.Marshal(args)
+  if err != nil {
+    return err
+  }
+  msg := message { Id: response_id, Action: name, Args: string(enc_args) }
   return websocket.JSON.Send(s.ws, msg)
 }
 

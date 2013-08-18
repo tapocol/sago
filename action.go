@@ -1,12 +1,17 @@
 package sago
 
 import (
+  "encoding/json"
 )
 
 type Request struct {
   Session *Session
   Id string
-  Args *map[string]interface{}
+  Args string
+}
+
+func (r *Request) Unmarshal(v interface{}) {
+  json.Unmarshal([]byte(r.Args), v)
 }
 
 var actions = make(map[string]chan *Request)

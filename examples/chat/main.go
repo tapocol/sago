@@ -5,9 +5,14 @@ import (
   "github.com/craigjackson/sago_chat"
 )
 
+type AuthArgs struct {
+  Name string `json:"name"`
+}
+
 func auth(r *sago.Request) {
-  args := *r.Args
-  r.Session.Data["name"] = args["name"]
+  args := AuthArgs{}
+  r.Unmarshal(&args)
+  r.Session.Data["name"] = args.Name
   r.Session.Send(r.Id, "success", make(map[string]interface{}))
 }
 
